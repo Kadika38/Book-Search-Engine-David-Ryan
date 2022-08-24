@@ -47,12 +47,12 @@ const resolvers = {
                     title
                 });
 
-                await User.findOneAndUpdate(
+                const user = await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $addToSet: { savedBooks: book._id } }
                 );
 
-                return book;
+                return user;
             }
             throw new AuthenticationError('You need to be logged in!');
         },
@@ -62,12 +62,12 @@ const resolvers = {
                     _id: bookId,
                 });
 
-                await User.findOneAndUpdate(
+                const user = await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $pull: { savedBooks: book._id } }
                 );
 
-                return book;
+                return user;
             }
             throw new AuthenticationError('You need to be logged in!');
         },
