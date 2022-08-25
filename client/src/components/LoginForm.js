@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
-
+import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
 import { LOGIN_USER } from '../utils/mutations';
 
@@ -16,6 +16,8 @@ const LoginForm = () => {
     setUserFormData({ ...userFormData, [name]: value });
   };
 
+  const loginUser = useMutation(LOGIN_USER);
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -25,8 +27,6 @@ const LoginForm = () => {
       event.preventDefault();
       event.stopPropagation();
     }
-
-    const [loginUser, { error, data }] = useMutation(LOGIN_USER);
 
     try {
       const response = await loginUser(userFormData);

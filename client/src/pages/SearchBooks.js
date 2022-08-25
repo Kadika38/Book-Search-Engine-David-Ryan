@@ -6,7 +6,6 @@ import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
 import { useMutation } from '@apollo/client';
-import { useParams, Link } from 'react-router-dom';
 import { SAVE_BOOK } from '../utils/mutations';
 
 const SearchBooks = () => {
@@ -56,6 +55,8 @@ const SearchBooks = () => {
     }
   };
 
+  const saveBook = useMutation(SAVE_BOOK);
+
   // create function to handle saving a book to our database
   const handleSaveBook = async (bookId) => {
     // find the book in `searchedBooks` state by the matching id
@@ -67,8 +68,6 @@ const SearchBooks = () => {
     if (!token) {
       return false;
     }
-
-    const [saveBook, { error, data }] = useMutation(SAVE_BOOK);
 
     try {
       const response = await saveBook(bookToSave, token);
