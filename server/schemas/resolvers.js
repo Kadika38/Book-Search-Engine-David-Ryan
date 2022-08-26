@@ -33,19 +33,13 @@ const resolvers = {
             }
 
             const token = signToken(user);
+            console.log(token);
 
             return { token, user };
         },
-        saveBook: async (parent, { authors, description, bookId, image, link, title }, context) => {
+        saveBook: async (parent, args, context) => {
             if (context.user) {
-                const book = await Book.create({
-                    authors,
-                    description,
-                    bookId,
-                    image,
-                    link,
-                    title
-                });
+                const book = await Book.create(args);
 
                 const user = await User.findOneAndUpdate(
                     { _id: context.user._id },
