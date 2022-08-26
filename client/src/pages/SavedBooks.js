@@ -41,9 +41,11 @@ const SavedBooks = () => {
   };
 
   // if data isn't here yet, say so
-  if (!userData) {
-    return <h2>You haven't saved any books yet!</h2>;
+  if (!userData || !userData.me) {
+    return <h2>Loading!</h2>;
   }
+
+  userData = userData.me;
 
   return (
     <>
