@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
@@ -9,8 +9,9 @@ import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
-  const { data } = useQuery(GET_ME);
-  let userData = data;
+  const [userData, setUserData] = useState({});
+  const [stateChanges, setStateChanges] = useState(0);
+  const { loading, data } = useQuery(GET_ME);
 
   const [removeBook] = useMutation(REMOVE_BOOK);
 
@@ -32,7 +33,9 @@ const SavedBooks = () => {
       }
 
       const updatedUser = await data;
-      userData = updatedUser;
+      setUserData(await data.me);
+      
+      if (updatedUser.me.savedBooks.length > 0) {setStateChanges(1)};
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
@@ -41,11 +44,9 @@ const SavedBooks = () => {
   };
 
   // if data isn't here yet, say so
-  if (!userData || !userData.me) {
+  if (loading || data.me === {}) {
     return <h2>Loading!</h2>;
   }
-
-  userData = userData.me;
 
   return (
     <>
@@ -54,6 +55,33 @@ const SavedBooks = () => {
           <h1>Viewing saved books!</h1>
         </Container>
       </Jumbotron>
+      {stateChanges === 0 && 
+      <Container>
+        <h2>
+          {data.me.savedBooks.length
+            ? `Viewing ${data.me.savedBooks.length} saved ${data.me.savedBooks.length === 1 ? 'book' : 'books'}:`
+            : 'You have no saved books!'}
+        </h2>
+        <CardColumns>
+          {data.me.savedBooks.map((book) => {
+            return (
+              <Card key={book.bookId} border='dark'>
+                {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
+                <Card.Body>
+                  <Card.Title>{book.title}</Card.Title>
+                  <p className='small'>Authors: {book.authors}</p>
+                  <Card.Text>{book.description}</Card.Text>
+                  <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>
+                    Delete this Book!
+                  </Button>
+                </Card.Body>
+              </Card>
+            );
+          })}
+        </CardColumns>
+      </Container>
+      }
+      {stateChanges > 0 && 
       <Container>
         <h2>
           {userData.savedBooks.length
@@ -78,6 +106,7 @@ const SavedBooks = () => {
           })}
         </CardColumns>
       </Container>
+      }
     </>
   );
 };
