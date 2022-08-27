@@ -19,7 +19,7 @@ UNFINISHED
 
 
 ## Deployment
-Deployed using Heroku at .
+Deployed using Heroku at https://book-search-engine-david-ryan.herokuapp.com/.
 
 ## Screenshot
 ![Screenshot of Website](bseScreenshot.jpg)
