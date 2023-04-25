@@ -21,6 +21,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "apollo-server-express": "^3.10.1",
+    "express": "^4.17.1",
     "graphql": "^16.6.0"
   }
 }
